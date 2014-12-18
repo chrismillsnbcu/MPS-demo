@@ -1,0 +1,25 @@
+/***** MPS Demo Styles *****/
+.content {
+	width:1155px;
+}
+.right-boxad {
+	display:inline-block;
+}
+.center {
+	text-align:center;
+}
+.mt40 {
+	margin-top:40px;
+}
+.mt20 {
+	margin-top:20px;
+}
+.m0auto {
+	margin:0 auto;
+}
+.p20 {
+	padding:20px;
+}
+h1 {
+	font-size:2.1rem;
+}
