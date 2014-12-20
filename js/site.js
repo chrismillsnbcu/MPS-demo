@@ -57,15 +57,19 @@ function runPagespeedCallbacks(result) {
   console.log(callbacks);
   console.log('/callbacks');*/
 
+  function test() {
+  	console.log('test');
+  }
+
   function runPagespeedCallbacks(d) {
   	console.log('d',d,'/d');
   }
 
 $.ajax({
 	type: 'GET',
-	url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com&callback=runPagespeedCallbacks&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
+	url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com&callback=test&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
 	success: function(data) {
-		$(body).append('<script>' + data + '</script>');
+		$('body').append('<script>' + data + '</script>');
 		console.log('ajax call response', data, '/ajax call response');
 	}
 });
