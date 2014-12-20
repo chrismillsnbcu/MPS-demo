@@ -50,6 +50,8 @@ function runPagespeedCallbacks(result) {
   }
 
 }
+
+setTimeout(runPagespeed, 0);
 /*
 
 
