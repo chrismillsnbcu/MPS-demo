@@ -220,6 +220,7 @@ function onInputData(data) {
     sortList: [[2,1]] 
   });
   // Show Table.
+  $('#graph').removeClass('loading');
   $('#chart').removeClass('none');
   // Build graph.
   var graph = {
