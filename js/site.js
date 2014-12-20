@@ -26,7 +26,7 @@ function runPagespeed() {
 
 // Our JSONP callback. Checks for errors, then invokes our callback handlers.
 function runPagespeedCallbacks(result) {
-	console.log(result);
+	console.log('result',result,'/result');
   if (result.error) {
     var errors = result.error.errors;
     for (var i = 0, len = errors.length; i < len; ++i) {
@@ -48,6 +48,7 @@ function runPagespeedCallbacks(result) {
       callbacks[fn](result);
     }
   }
+  console.log(callbacks.length);
   console.log('callbacks');
   console.log(callbacks);
   console.log('/callbacks');
