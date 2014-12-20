@@ -50,31 +50,23 @@ function runPagespeedCallbacks(result) {
   }
 
 }
-
-
-  console.log(callbacks.length);
-  console.log('callbacks');
-  console.log(callbacks);
-  console.log('/callbacks');*/
-
-  function test() {
-  	console.log('test');
-  }
-
+*/
+$(document).ready(function() {
   function runPagespeedCallbacks(d) {
   	console.log('d',d,'/d');
   }
 
-$.ajax({
-	type: 'GET',
-	url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com&callback=test&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
-	success: function(data) {
-		$('body').append('<script>' + data + '</script>');
-		console.log('ajax call response', data, '/ajax call response');
-	}
+  function runPagespeed() {
+		$.ajax({
+			type: 'GET',
+			url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com&callback=runPagespeedCallbacks&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
+			success: function(data) {
+				$('body').append('<script>' + data + '</script>');
+				console.log('ajax call response', data, '/ajax call response');
+			}
+		});
+  };
+
 });
 
-// Invoke the callback that fetches results. Async here so we're sure
-// to discover any callbacks registered below, but this can be
-// synchronous in your code.
-//setTimeout(runPagespeed, 0);
+setTimeout(runPagespeed, 0);
