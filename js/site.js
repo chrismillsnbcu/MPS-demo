@@ -7,7 +7,7 @@ var CHART_API_URL = 'http://chart.apis.google.com/chart?';
 
 // Object that will hold the callbacks that process results from the
 // PageSpeed Insights API.
-/*var callbacks = {}
+var callbacks = {}
 
 // Invokes the PageSpeed Insights API. The response will contain
 // JavaScript that invokes our callback with the PageSpeed results.
@@ -50,17 +50,45 @@ function runPagespeedCallbacks(result) {
   }
 
 }
-*/
+/*
+
+
 $(document).ready(function() {
-	$.ajax({
-		type: 'GET',
-		//url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com&callback=runPagespeedCallbacks&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
-		url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com/&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
-		dataType: 'json',
-		success: function(data) {
-			console.log(data);
-			console.log($('body'));
-			$('body').append(data);
-		}
-	});
+
+  function googlePageSpeed() {
+    $.ajax({
+      type: 'GET',
+      url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com/&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
+      dataType: 'json',
+      success: function(data) {
+        console.log(data);
+      }
+    });
+  }
+
+  function onInputData(d) {
+    console.log('on input data');
+    console.log(d);
+    console.log('/on input data');
+  }
+
+  // Harp file exported from NetExport firebug plugin, must be done manually.
+  $.ajax({
+    type: 'GET',
+    url: '/harp/nbcnews_12_19_14.harp',
+    dataType: 'harp',
+    callback: onInputData,
+    success: function(data) {
+      alert('success');
+      console.log(JSON.parse(data));
+      var tbody = $('#chart tbody');
+      for(var i=0; i<data.log.entries.length; i++) {
+        var _this = data.log.entries[i];
+        $(tbody).append('<td>' + _this.request.url + '</td><td>' + _this.time + '</td>');
+      }
+      googlePageSpeed();
+    }
+  });
+
 });
+*/
