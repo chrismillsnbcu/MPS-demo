@@ -53,7 +53,9 @@ function runPagespeedCallbacks(result) {
 */
 
 function runPagespeedCallbacks(d) {
+	console.log('runPagespeedCallbacks');
 	console.log('d',d,'/d');
+	console.log('/runPagespeedCallbacks');
 }
 
 function runPagespeed() {
@@ -61,7 +63,7 @@ function runPagespeed() {
 		type: 'GET',
 		url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com&callback=runPagespeedCallbacks&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
 		success: function(data) {
-			$('body').append('<script>' + data + '</script>');
+			$('body').append('<script type="text/javascript">eval(' + data + ');</script>');
 			console.log('ajax call response', data, '/ajax call response');
 		}
 	});
