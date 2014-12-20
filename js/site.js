@@ -7,7 +7,7 @@ var CHART_API_URL = 'http://chart.apis.google.com/chart?';
 
 // Object that will hold the callbacks that process results from the
 // PageSpeed Insights API.
-var callbacks = {}
+/*var callbacks = {}
 
 // Invokes the PageSpeed Insights API. The response will contain
 // JavaScript that invokes our callback with the PageSpeed results.
@@ -48,21 +48,24 @@ function runPagespeedCallbacks(result) {
       callbacks[fn](result);
     }
   }
+
+}
+
+
   console.log(callbacks.length);
   console.log('callbacks');
   console.log(callbacks);
-  console.log('/callbacks');
-}
+  console.log('/callbacks');*/
 
-function callback() {
-	console.log('blank callback');
-}
+  function runPagespeedCallbacks(d) {
+  	console.log('d',d,'/d');
+  }
 
 $.ajax({
 	type: 'GET',
 	url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com&callback=runPagespeedCallbacks&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
-	dataType: 'json',
 	success: function(data) {
+		$(body).append('<script>' + data + '</script>');
 		console.log('ajax call response', data, '/ajax call response');
 	}
 });
@@ -70,4 +73,4 @@ $.ajax({
 // Invoke the callback that fetches results. Async here so we're sure
 // to discover any callbacks registered below, but this can be
 // synchronous in your code.
-setTimeout(runPagespeed, 0);
+//setTimeout(runPagespeed, 0);
