@@ -51,6 +51,6 @@ td.alert {
 }
 .loading {
 	width:1155px;
-	background:url('../img/loader.gif') 570px 150px no-repeat;
+	background:url('../img/loader.gif') 570px 210px no-repeat;
 	min-height:500px;
 }
