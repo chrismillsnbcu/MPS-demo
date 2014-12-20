@@ -1,6 +1,6 @@
 /***** MPS Demo - NBC News.com waterfall *****/
 var API_KEY = 'AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo';
-var URL_TO_GET_RESULTS_FOR = 'http://code.google.com/speed/page-speed/';
+var URL_TO_GET_RESULTS_FOR = 'http://www.nbcnews.com';
 
 var API_URL = 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?';
 var CHART_API_URL = 'http://chart.apis.google.com/chart?';
@@ -26,6 +26,7 @@ function runPagespeed() {
 
 // Our JSONP callback. Checks for errors, then invokes our callback handlers.
 function runPagespeedCallbacks(result) {
+	console.log(result);
   if (result.error) {
     var errors = result.error.errors;
     for (var i = 0, len = errors.length; i < len; ++i) {
