@@ -52,7 +52,7 @@ function runPagespeedCallbacks(result) {
 
 $.ajax({
 	type: 'GET',
-	url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
+	url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com&callback=runPagespeedCallbacks&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
 	success: function(data) {
 		console.log(data);
 	}
