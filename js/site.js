@@ -52,22 +52,14 @@ function runPagespeedCallbacks(result) {
 }
 */
 
-function runPagespeedCallbacks(d) {
-	console.log('runPagespeedCallbacks');
-	console.log('d',d,'/d');
-	console.log('/runPagespeedCallbacks');
-}
-
 function runPagespeed() {
 	$.ajax({
 		type: 'GET',
-		url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com&callback=runPagespeedCallbacks&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
+		//url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com&callback=runPagespeedCallbacks&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
+		url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://code.google.com/speed/page-speed/&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
 		dataType: 'json',
 		success: function(data) {
-			var trim = data.replace('runPagespeedCallbacks(', '');
-			trim = trim.replace(');','');
-			console.log(trim);
-			$('body').append(trim);
+			$('body').append(data);
 		}
 	});
 };
