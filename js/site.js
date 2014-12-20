@@ -54,9 +54,15 @@ function runPagespeedCallbacks(result) {
   console.log('/callbacks');
 }
 
+function callback() {
+	console.log('blank callback');
+}
+
 $.ajax({
 	type: 'GET',
 	url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com&callback=runPagespeedCallbacks&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
+	dataType: 'jsonp',
+	callback: callback,
 	success: function(data) {
 		console.log('ajax call response', data, '/ajax call response');
 	}
