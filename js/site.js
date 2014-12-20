@@ -1,5 +1,5 @@
 /***** MPS Demo - NBC News.com waterfall *****/
-var API_KEY = 'AIzaSyDi67W8JBn2RGPFTKH97Cin0Jm_9frKB-0';
+var API_KEY = 'AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo';
 var URL_TO_GET_RESULTS_FOR = 'http://code.google.com/speed/page-speed/';
 
 var API_URL = 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?';
