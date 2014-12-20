@@ -50,6 +50,14 @@ function runPagespeedCallbacks(result) {
   }
 }
 
+$.ajax({
+	type: 'GET',
+	url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
+	success: function(data) {
+		console.log(data);
+	}
+})
+
 // Invoke the callback that fetches results. Async here so we're sure
 // to discover any callbacks registered below, but this can be
 // synchronous in your code.
