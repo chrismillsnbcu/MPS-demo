@@ -48,6 +48,7 @@ function runPagespeedCallbacks(result) {
       callbacks[fn](result);
     }
   }
+  console.log(callbacks);
 }
 
 $.ajax({
