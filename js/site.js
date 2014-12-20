@@ -51,22 +51,20 @@ function runPagespeedCallbacks(result) {
 
 }
 */
-$(document).ready(function() {
-  function runPagespeedCallbacks(d) {
-  	console.log('d',d,'/d');
-  }
 
-  function runPagespeed() {
-		$.ajax({
-			type: 'GET',
-			url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com&callback=runPagespeedCallbacks&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
-			success: function(data) {
-				$('body').append('<script>' + data + '</script>');
-				console.log('ajax call response', data, '/ajax call response');
-			}
-		});
-  };
+function runPagespeedCallbacks(d) {
+	console.log('d',d,'/d');
+}
 
-});
+function runPagespeed() {
+	$.ajax({
+		type: 'GET',
+		url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com&callback=runPagespeedCallbacks&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
+		success: function(data) {
+			$('body').append('<script>' + data + '</script>');
+			console.log('ajax call response', data, '/ajax call response');
+		}
+	});
+};
 
 setTimeout(runPagespeed, 0);
