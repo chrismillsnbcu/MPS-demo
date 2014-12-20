@@ -48,16 +48,18 @@ function runPagespeedCallbacks(result) {
       callbacks[fn](result);
     }
   }
+  console.log('callbacks');
   console.log(callbacks);
+  console.log('/callbacks');
 }
 
 $.ajax({
 	type: 'GET',
 	url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=http://www.nbcnews.com&callback=runPagespeedCallbacks&key=AIzaSyB-guPk6KtXj4a1k4ePyIh4CWVZJxLaaDo',
 	success: function(data) {
-		console.log(data);
+		console.log('ajax call response', data, '/ajax call response');
 	}
-})
+});
 
 // Invoke the callback that fetches results. Async here so we're sure
 // to discover any callbacks registered below, but this can be
