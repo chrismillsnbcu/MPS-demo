@@ -29,3 +29,23 @@ h2 {
 .right {
 	float:right;
 }
+.none {
+	display:none;
+}
+#chart {
+	width:1155px;
+	overflow:hidden;
+	white-space: nowrap;
+	table-layout:fixed;
+}
+#chart td {
+	overflow:hidden;
+	text-overflow: ellipsis;
+}
+td.alert {
+	background:#ff0000;
+	color:#fff;
+}
+.loadTime span {
+	float:right;
+}

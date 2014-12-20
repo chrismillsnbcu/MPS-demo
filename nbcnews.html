@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>MPS Demo - NBCNews.com Javascript Execution</title>
+  <title>MPS Demo - NBCNews.com Waterfall</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="css/foundation.min.css"/>
   <link rel="stylesheet" href="css/styles.css"/>
@@ -15,7 +15,7 @@
 
       <ul class="title-area">
         <li class="name">
-          <h1><a href="#">NBC News Javascript Execution</a></h1>
+          <h1><a href="#">NBC News Site Waterfall</a></h1>
         </li>
       </ul>
 
@@ -29,9 +29,18 @@
 
 
         <h1 class="mt20">MPS Demo</h1>
-        <h2>NBCNews.com Javascript Execution Timing</h2>
 
         <div id="graph"></div>
+
+        <table id="chart" class="none" width="100%">
+          <thead>
+            <th width="705">File Path</th>
+            <th width="250">File Type</th>
+            <th width="200">Load Time in Milliseconds</th>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
 
         <!--<iframe width="1000" height="400" src="http://www.nbcnews.com" id="testSite"></iframe>-->
 
@@ -45,8 +54,10 @@
     </footer>
 
     <script src="js/jquery-1.11.2.min.js"></script>
+    <script src="js/jquery.tablesorter.min.js"></script>
     <script src="js/highcharts.min.js"></script>
     <script src="js/site.js"></script>
+    <script id="siteHar" src="harp/nbcnews_12_19_14.harp"></script>
 
 </body>
 </html>
