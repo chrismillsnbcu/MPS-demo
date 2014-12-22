@@ -8,7 +8,7 @@ function populateResults(d) {
   var results = '<ul>';
   results += '<li>MPS was loaded to the DOM after being blocked for <strong>' + data.mpsBlocked + ' milliseconds</strong> and waiting for <strong>' + d.mpsWait + ' milliseconds</strong>, with a load time of <strong>' + data.mps + ' milliseconds</strong>.</li>';
   //results += '<li>GPT was loaded to the DOM after being blocked for <strong>' + data.mpsBlocked + ' milliseconds</strong> and waiting for <strong>' + d.mpsWait + ' milliseconds</strong>, with a load time of <strong>' + data.mps + 'milliseconds</strong> .</li>';
-  //results += '<li>MPS was loaded to the DOM after being blocked for <strong>' + data.mpsBlocked + ' milliseconds</strong> and waiting for <strong>' + d.mpsWait + ' milliseconds</strong>, with a load time of <strong>' + data.mps + 'milliseconds</strong> .</li>';
+  results += '<li>Doubleclick Ad code was loaded to the DOM after being blocked for <strong>' + data.adBlocked + ' milliseconds</strong> and waiting for <strong>' + d.adWait + ' milliseconds</strong>, with a load time of <strong>' + data.adLoad + ' milliseconds</strong> .</li>';
   results += '</ul>';
   $('.panel-results').html(results);
 
@@ -298,6 +298,10 @@ function onInputData(data) {
   var totalAdLoad = 0;
   var totalAdWait = 0;
   var totalAdBlocked = 0;
+  // Ad Network Library Totals.
+  var totalAdLibLoad = 0;
+  var totalAdLibWait = 0;
+  var totalAdLibBlocked = 0;
 
   var d = data.log;
   for(var i=0; i<d.entries.length; i++) {
@@ -306,13 +310,19 @@ function onInputData(data) {
     var _thisMimeType = _this.response.content.mimeType;
     var _thisTimings = _this.timings;
     var _thisMPS = _thisUrl.indexOf('mps') > -1;
+    var _thisAdNetwork = _thisUrl.indexOf(mpsDemo.adNetwork) > -1;
     // Append to all chart.
     appendChartAll(_this, _thisUrl, _thisMimeType, _thisTimings, _thisMPS);
-    // Increment execution time for javascript/css/mps files.
+    // Increment execution time for mps files.
     if(_thisMPS) {
       totalMPSLoad = totalMPSLoad + _this.time;
       totalMPSWait = totalMPSWait + _thisTimings.wait;
       totalMPSBlocked = totalMPSBlocked + _thisTimings.blocked;
+    }
+    if(_thisAdNetwork) {
+      totalAdLoad = totalAdLoad + _this.time;
+      totalAdWait = totalAdWait + _thisTimings.wait;
+      totalAdBlocked = totalAdBlocked + _thisTimings.blocked;
     }
     // Increment total values based on file type, used for graph.
     totalVal = totalVal + _this.time;
@@ -363,9 +373,12 @@ function onInputData(data) {
       mps: totalMPSLoad,
       mpsWait: totalMPSWait,
       mpsBlocked: totalMPSBlocked,
-      ad: totalAdLoad,
+      adLoad: totalAdLoad,
       adWait: totalAdWait,
       adBlocked: totalAdBlocked,
+      lib: totalAdLibLoad,
+      libWait: totalAdLibWait,
+      libBlocked: totalAdLibBlocked,
       urls: jsUrls
     }
   }
