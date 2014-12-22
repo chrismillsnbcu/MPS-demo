@@ -1,4 +1,98 @@
-/***** MPS Demo - NBC News.com waterfall *****/
+/***** MPS Demo - Waterfall details *****/
+// Populate results.
+function populateResults(d) {
+  var data = d;
+  // Calculate load times for ads.
+
+  // Populate results.
+  var results = '<ul>';
+  results += '<li>MPS was loaded to the DOM after being blocked for <strong>' + data.mpsBlocked + ' milliseconds</strong> and waiting for <strong>' + d.mpsWait + ' milliseconds</strong>, with a load time of <strong>' + data.mps + ' milliseconds</strong>.</li>';
+  //results += '<li>GPT was loaded to the DOM after being blocked for <strong>' + data.mpsBlocked + ' milliseconds</strong> and waiting for <strong>' + d.mpsWait + ' milliseconds</strong>, with a load time of <strong>' + data.mps + 'milliseconds</strong> .</li>';
+  //results += '<li>MPS was loaded to the DOM after being blocked for <strong>' + data.mpsBlocked + ' milliseconds</strong> and waiting for <strong>' + d.mpsWait + ' milliseconds</strong>, with a load time of <strong>' + data.mps + 'milliseconds</strong> .</li>';
+  results += '</ul>';
+  $('.panel-results').html(results);
+
+  // Enable Sorting.
+  $("#chart-all").tablesorter();
+  $("#chart-js").tablesorter();
+
+  // Show Table.
+  $('#graph').removeClass('loading');
+  $('#content').removeClass('none');
+}
+// Build JS graph.
+function buildGraphJS(d) {
+
+  var colors = Highcharts.getOptions().colors,
+  categories = ['Javascript'],
+  data = [{
+      y: 100,
+      color: colors[0],
+      drilldown: {
+          name: 'Javascript',
+          categories: ['All Javasript'],
+          data: [50, 50],
+      }
+  }],
+  urls = [],
+  i,
+  brightness;
+
+  for(var i=0; i< d.urls.length; i++) {
+    var time = (d.urls[i].time / d.js) * 100;
+    time = time.toFixed(2) / 1;
+    urls.push({
+        name: d.urls[i].url,
+        y: time,
+    });
+  }
+
+$('#graph-js').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Javascript Load Times'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        marginLeft: 30,
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    formatter: function () {
+                      if(this.y > 1 || this.point.name.indexOf('mps') > -1) {
+                        return '<b>' + this.point.name + ':</b><br />' + this.y + '%';
+                      }
+                    },
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+          type: 'pie',
+          name: 'Size:',
+          data: urls,
+          size: '80%',
+          innerSize: '60%',
+          dataLabels: {
+            formatter: function () {
+              return '<b>' + this.point.name + ':</b><br />' + this.y + '%';
+            }
+          }
+        }]
+    });
+
+  populateResults(d);
+
+}
 // Build graph.
 function buildGraph(d) {
 
@@ -6,15 +100,15 @@ function buildGraph(d) {
   var miscTot = data.flash + data.font + data.html + data.misc + data.text;
 
   // Total perentages per category.
-  var percJs = (data.js / data.total) * 100;
+  var percJs = (data.jsObj.js / data.total) * 100;
   var percCss = (data.css / data.total) * 100;
   var percImages = (data.image / data.total) * 100;
   var percMisc = (miscTot / data.total) * 100;
 
   // JS and MPS percentages.
-  var percAllJs = data.js - data.mps;
-  percAllJs = (percAllJs / data.js) * percJs;
-  var percMps = (data.mps / data.js) * percJs;
+  var percAllJs = data.jsObj.js - data.jsObj.mps;
+  percAllJs = (percAllJs / data.jsObj.js) * percJs;
+  var percMps = (data.jsObj.mps / data.jsObj.js) * percJs;
 
   // Misc percentages.
   var percFlash = (data.flash / miscTot) * percMisc;
@@ -83,74 +177,109 @@ function buildGraph(d) {
   brightness;
 
 
-// Build the data arrays
-for (i = 0; i < dataLen; i += 1) {
+  // Build the data arrays
+  for (i = 0; i < dataLen; i += 1) {
 
-  // add browser data
-  browserData.push({
-      name: categories[i],
-      y: data[i].y,
-      color: data[i].color
-  });
+    // add browser data
+    browserData.push({
+        name: categories[i],
+        y: data[i].y,
+        color: data[i].color
+    });
 
-  // add version data
-  drillDataLen = data[i].drilldown.data.length;
-  for (j = 0; j < drillDataLen; j += 1) {
-      brightness = 0.2 - (j / drillDataLen) / 5;
-      versionsData.push({
-          name: data[i].drilldown.categories[j],
-          y: data[i].drilldown.data[j],
-          color: Highcharts.Color(data[i].color).brighten(brightness).get()
-      });
+    // add version data
+    drillDataLen = data[i].drilldown.data.length;
+    for (j = 0; j < drillDataLen; j += 1) {
+        brightness = 0.2 - (j / drillDataLen) / 5;
+        versionsData.push({
+            name: data[i].drilldown.categories[j],
+            y: data[i].drilldown.data[j],
+            color: Highcharts.Color(data[i].color).brighten(brightness).get()
+        });
+    }
   }
+  // Graph.
+  $('#graph-all').highcharts({
+    chart: {
+        type: 'pie'
+    },
+    title: {
+        text: mpsDemo.site + ' Site Waterfall Load Times'
+    },
+    plotOptions: {
+        pie: {
+            shadow: false,
+            center: ['50%', '50%']
+        }
+    },
+    tooltip: {
+        valueSuffix: '%'
+    },
+    series: [{
+        name: 'Category',
+        data: browserData,
+        size: '60%',
+        dataLabels: {
+            formatter: function () {
+                return this.y > 5 ? this.point.name : null;
+            },
+            color: 'white',
+            distance: -30
+        }
+    }, {
+        name: 'Sub Category',
+        data: versionsData,
+        size: '80%',
+        innerSize: '60%',
+        dataLabels: {
+            formatter: function () {
+                // display only if larger than 1
+                return this.y > .5 ? '<b>' + this.point.name + ':</b> ' + this.y + '%'  : null;
+            }
+        }
+    }]
+  });
+  buildGraphJS(d.jsObj);
 }
-// Graph.
-$('#graph').highcharts({
-  chart: {
-      type: 'pie'
-  },
-  title: {
-      text: 'NBC News Site Waterfall Load Times'
-  },
-  plotOptions: {
-      pie: {
-          shadow: false,
-          center: ['50%', '50%']
-      }
-  },
-  tooltip: {
-      valueSuffix: '%'
-  },
-  series: [{
-      name: 'Category',
-      data: browserData,
-      size: '60%',
-      dataLabels: {
-          formatter: function () {
-              return this.y > 5 ? this.point.name : null;
-          },
-          color: 'white',
-          distance: -30
-      }
-  }, {
-      name: 'Sub Category',
-      data: versionsData,
-      size: '80%',
-      innerSize: '60%',
-      dataLabels: {
-          formatter: function () {
-              // display only if larger than 1
-              return this.y > .5 ? '<b>' + this.point.name + ':</b> ' + this.y + '%'  : null;
-          }
-      }
-  }]
-});
+
+// Manually format urls.
+function formatUrl(d) {
+  var _url = d;
+  if(_url.indexOf('.com') > -1) {
+    _url = _url.split('.com');
+    _url = _url[0] + '.com';
+  } else if(_url.indexOf('.net') > -1) {
+   _url = _url.split('.net');
+   _url = _url[0] + '.net';
+  }
+  _url = _url.replace('http://', '');
+  _url = _url.replace('https://', '');
+  return _url;
+}
+// Append to chart all.
+function appendChartAll(_this, _thisUrl, _thisMimeType, _thisTimings, _thisMPS) {
+  var tbody = $('#chart-all tbody');
+  var mpsClass = '';
+  if(_thisMPS) {
+    mpsClass = ' alert';
+  }
+  $(tbody).append('<tr"><td width="705" class="loadUrl' + mpsClass + '"><span class="hoverUrl none">' + _thisUrl + '</span>' + _thisUrl + '</td><td width="250" class="' + mpsClass + '">' + _thisMimeType + '</td><td width="50" class="' + mpsClass + '">' + _thisTimings.blocked + '</td><td width="50" class="' + mpsClass + '">' + _thisTimings.wait + '</td><td width="100" align="right" class="loadTime' + mpsClass + '"><span>' + _this.time + '</span></td></tr>');
+}
+// Append to chart js.
+function appendChartJS(_this, _thisUrl, _thisMimeType, _thisTimings, _thisMPS) {
+  var tbody = $('#chart-js tbody');
+  var mpsClass = '';
+  if(_thisMPS) {
+    mpsClass = ' alert';
+  }
+  $(tbody).append('<tr"><td width="705" class="loadUrl' + mpsClass + '"><span class="hoverUrl none">' + _thisUrl + '</span>' + _thisUrl + '</td><td width="250" class="' + mpsClass + '">' + _thisMimeType + '</td><td width="50" class="' + mpsClass + '">' + _thisTimings.blocked + '</td><td width="50" class="' + mpsClass + '">' + _thisTimings.wait + '</td><td width="100" align="right" class="loadTime' + mpsClass + '"><span>' + _this.time + '</span></td></tr>');
 }
 
 // Parse harp file.
 function onInputData(data) {
-  var mpsFlag;
-  var totalMPSLoad = 0;
+  var jsUrl = [];
+  var jsUrls = [];
+  // Total vars.
   var totalJSLoad = 0;
   var totalCSSLoad = 0;
   var totalXMLLoad = 0;
@@ -161,71 +290,65 @@ function onInputData(data) {
   var totalTextLoad = 0;
   var totalMiscLoad = 0;
   var totalVal = 0;
+  // MPS Specific Totals.
+  var totalMPSLoad = 0;
+  var totalMPSWait = 0;
+  var totalMPSBlocked = 0;
+  // Ad Network Specific Totals.
+  var totalAdLoad = 0;
+  var totalAdWait = 0;
+  var totalAdBlocked = 0;
+
   var d = data.log;
-  var tbody = $('#chart tbody');
   for(var i=0; i<d.entries.length; i++) {
     var _this = data.log.entries[i];
     var _thisUrl = _this.request.url;
     var _thisMimeType = _this.response.content.mimeType;
+    var _thisTimings = _this.timings;
+    var _thisMPS = _thisUrl.indexOf('mps') > -1;
+    // Append to all chart.
+    appendChartAll(_this, _thisUrl, _thisMimeType, _thisTimings, _thisMPS);
     // Increment execution time for javascript/css/mps files.
-    if(_thisUrl.indexOf('mps') > -1) {
-      $(tbody).append('<tr><td width="705" class="alert loadUrl"><span class="hoverUrl none">' + _thisUrl + '</span>' + _thisUrl + '</td><td width="250" class="alert">' + _thisMimeType + '</td><td width="200" align="right" class="alert loadTime"><span>' + _this.time + '</span></td></tr>');
+    if(_thisMPS) {
       totalMPSLoad = totalMPSLoad + _this.time;
-    } else {
-      $(tbody).append('<tr><td width="705" class="loadUrl"><span class="hoverUrl none">' + _thisUrl + '</span>' + _thisUrl + '</td><td width="250">' + _thisMimeType + '</td><td width="200" align="right" class="loadTime"><span>' + _this.time + '</span></td></tr>');
+      totalMPSWait = totalMPSWait + _thisTimings.wait;
+      totalMPSBlocked = totalMPSBlocked + _thisTimings.blocked;
     }
     // Increment total values based on file type, used for graph.
     totalVal = totalVal + _this.time;
-    switch(_thisMimeType) {
-      case 'text/javascript':
-        totalJSLoad = totalJSLoad + _this.time;
-        break;
-      case 'application/x-javascript':
-        totalJSLoad = totalJSLoad + _this.time;
-        break;
-      case 'application/javascript':
-        totalJSLoad = totalJSLoad + _this.time;
-        break;
-      case 'text/css':
-        totalCSSLoad = totalCSSLoad + _this.time;
-        break;
-      case 'text/xml':
-        totalXMLLoad = totalXMLLoad + _this.time;
-        break;
-      case 'text/plain':
-        totalTextLoad = totalTextLoad + _this.time;
-        break;
-      case 'text/html':
-        totalHtmlLoad = totalHtmlLoad + _this.time;
-        break;
-      case 'text/html':
-        totalHtmlLoad = totalHtmlLoad + _this.time;
-        break;
-      case 'application/x-shockwave-flash':
-        totalFlashLoad = totalFlashLoad + _this.time;
-        break;
-      case 'application/font-woff':
-        totalFontLoad = totalFontLoad + _this.time;
-        break;
-      default:
-        if(_thisMimeType.indexOf('image') > -1) {
-          totalImageLoad = totalImageLoad + _this.time;
-        } else {
-          totalMiscLoad = totalMiscLoad + _this.time;
-        }
+    // Append to js table, increment totals.
+    if(_thisMimeType.indexOf('javascript') > -1) {
+      totalJSLoad = totalJSLoad + _this.time;
+      var jsUrl = {
+        url: formatUrl(_this.request.url),
+        name: _this.request.url,
+        time: _this.time,
+        timings: _this.timings,
+        type: _thisMimeType
+      }
+      jsUrls.push(jsUrl);
+      // Append to JS table.
+      appendChartJS(_this, _thisUrl, _thisMimeType, _thisTimings, _thisMPS);
+    } else if(_thisMimeType.indexOf('css') > -1) {
+      totalCSSLoad = totalCSSLoad + _this.time;
+    } else if(_thisMimeType.indexOf('xml') > -1) {
+      totalXMLLoad = totalXMLLoad + _this.time;
+    } else if(_thisMimeType.indexOf('plain') > -1) {
+      totalTextLoad = totalTextLoad + _this.time;
+    } else if(_thisMimeType.indexOf('html') > -1) {
+      totalHtmlLoad = totalHtmlLoad + _this.time;
+    } else if(_thisMimeType.indexOf('flash') > -1) {
+      totalFlashLoad = totalFlashLoad + _this.time;
+    } else if(_thisMimeType.indexOf('font') > -1) {
+      totalFontLoad = totalFontLoad + _this.time;
+    } else if(_thisMimeType.indexOf('image') > -1) {
+      totalImageLoad = totalImageLoad + _this.time;
+    } else {
+      totalMiscLoad = totalMiscLoad + _this.time;
     }
   }
-  // Sort table.
-  $("#chart").tablesorter({ 
-    sortList: [[2,1]] 
-  });
-  // Show Table.
-  $('#graph').removeClass('loading');
-  $('#chart').removeClass('none');
   // Build graph.
   var graph = {
-    mps: totalMPSLoad,
-    js: totalJSLoad,
     css: totalCSSLoad,
     image: totalImageLoad,
     font: totalFontLoad,
@@ -234,10 +357,42 @@ function onInputData(data) {
     flash: totalFlashLoad,
     text: totalTextLoad,
     misc: totalMiscLoad,
-    total: totalVal
+    total: totalVal,
+    jsObj: {
+      js: totalJSLoad,
+      mps: totalMPSLoad,
+      mpsWait: totalMPSWait,
+      mpsBlocked: totalMPSBlocked,
+      ad: totalAdLoad,
+      adWait: totalAdWait,
+      adBlocked: totalAdBlocked,
+      urls: jsUrls
+    }
   }
   buildGraph(graph);
 }
+
+$(document).ready(function() {
+
+  // Chart toggling.
+  $('.button.tabs-js').on('click', function(e) {
+    $('#chart-all').addClass('none');
+    $('.tabs-all').addClass('secondary');
+    $('.tabs-js').removeClass('secondary');
+    $('#chart-js').removeClass('none');
+    e.preventDefault();
+  });
+  $('.button.tabs-all').on('click', function(e) {
+    $('#chart-all').removeClass('none');
+    $('.tabs-all').removeClass('secondary');
+    $('.tabs-js').addClass('secondary');
+    $('#chart-js').addClass('none');
+    e.preventDefault();
+  });
+
+  // Init.
+  $('body').append('<script id="siteHar" src="' + mpsDemo.harUrl +'"></script>');
+});
 /*
 $(document).ready(function() {
   $('#chart .loadUrl').on('hover', function() {
