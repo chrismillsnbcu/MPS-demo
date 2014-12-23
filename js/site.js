@@ -7,7 +7,7 @@ function populateResults(d) {
   // Populate results.
   var results = '<ul>';
   results += '<li>MPS was loaded to the DOM after being blocked for <strong>' + data.mpsBlocked + ' milliseconds</strong> and waiting for <strong>' + d.mpsWait + ' milliseconds</strong>, with a load time of <strong>' + data.mps + ' milliseconds</strong>.</li>';
-  //results += '<li>GPT was loaded to the DOM after being blocked for <strong>' + data.mpsBlocked + ' milliseconds</strong> and waiting for <strong>' + d.mpsWait + ' milliseconds</strong>, with a load time of <strong>' + data.mps + 'milliseconds</strong> .</li>';
+  results += '<li>GPT was loaded to the DOM after being blocked for <strong>' + data.libBlocked + ' milliseconds</strong> and waiting for <strong>' + d.libWait + ' milliseconds</strong>, with a load time of <strong>' + data.lib + 'milliseconds</strong> .</li>';
   results += '<li>Doubleclick Ad code was loaded to the DOM after being blocked for <strong>' + data.adBlocked + ' milliseconds</strong> and waiting for <strong>' + d.adWait + ' milliseconds</strong>, with a load time of <strong>' + data.adLoad + ' milliseconds</strong> .</li>';
   results += '</ul>';
   $('.panel-results').html(results);
@@ -294,14 +294,19 @@ function onInputData(data) {
   var totalMPSLoad = 0;
   var totalMPSWait = 0;
   var totalMPSBlocked = 0;
-  // Ad Network Specific Totals.
-  var totalAdLoad = 0;
-  var totalAdWait = 0;
-  var totalAdBlocked = 0;
   // Ad Network Library Totals.
   var totalAdLibLoad = 0;
   var totalAdLibWait = 0;
   var totalAdLibBlocked = 0;
+  // Ad Network Specific Totals.
+  var totalAdLoad = 0;
+  var totalAdWait = 0;
+  var totalAdBlocked = 0;
+  // MPS Demo vars.
+  var adLibrary = mpsDemo.adLibrary + '.js';
+  adLibrary = adLibrary.toLowerCase();
+  var adNetwork = mpsDemo.adNetwork;
+  adNetwork = adNetwork.toLowerCase();
 
   var d = data.log;
   for(var i=0; i<d.entries.length; i++) {
@@ -309,21 +314,8 @@ function onInputData(data) {
     var _thisUrl = _this.request.url;
     var _thisMimeType = _this.response.content.mimeType;
     var _thisTimings = _this.timings;
-    var _thisMPS = _thisUrl.indexOf('mps') > -1;
-    var _thisAdNetwork = _thisUrl.indexOf(mpsDemo.adNetwork) > -1;
     // Append to all chart.
     appendChartAll(_this, _thisUrl, _thisMimeType, _thisTimings, _thisMPS);
-    // Increment execution time for mps files.
-    if(_thisMPS) {
-      totalMPSLoad = totalMPSLoad + _this.time;
-      totalMPSWait = totalMPSWait + _thisTimings.wait;
-      totalMPSBlocked = totalMPSBlocked + _thisTimings.blocked;
-    }
-    if(_thisAdNetwork) {
-      totalAdLoad = totalAdLoad + _this.time;
-      totalAdWait = totalAdWait + _thisTimings.wait;
-      totalAdBlocked = totalAdBlocked + _thisTimings.blocked;
-    }
     // Increment total values based on file type, used for graph.
     totalVal = totalVal + _this.time;
     // Append to js table, increment totals.
@@ -337,7 +329,25 @@ function onInputData(data) {
         type: _thisMimeType
       }
       jsUrls.push(jsUrl);
-      // Append to JS table.
+      // Increment ad totals.
+      var _thisMPS = _thisUrl.indexOf('mps.') > -1;
+      var _thisAdLibrary = _thisUrl.indexOf(adLibrary) > -1;
+      var _thisAdNetwork = _thisUrl.indexOf(adNetwork) > -1;
+      if(_thisMPS) {
+        totalMPSLoad = totalMPSLoad + _this.time;
+        totalMPSWait = totalMPSWait + _thisTimings.wait;
+        totalMPSBlocked = totalMPSBlocked + _thisTimings.blocked;
+      }
+      if(_thisAdLibrary) {
+        totalAdLibLoad = totalAdLibLoad + _this.time;
+        totalAdLibWait = totalAdLibWait + _thisTimings.wait;
+        totalAdLibBlocked = totalAdLibBlocked + _thisTimings.blocked;
+      }
+      if(_thisAdNetwork) {
+        totalAdLoad = totalAdLoad + _this.time;
+        totalAdWait = totalAdWait + _thisTimings.wait;
+        totalAdBlocked = totalAdBlocked + _thisTimings.blocked;
+      }
       appendChartJS(_this, _thisUrl, _thisMimeType, _thisTimings, _thisMPS);
     } else if(_thisMimeType.indexOf('css') > -1) {
       totalCSSLoad = totalCSSLoad + _this.time;
