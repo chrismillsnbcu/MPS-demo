@@ -78,7 +78,7 @@ $('#graph-js').highcharts({
         },
         series: [{
           type: 'pie',
-          name: 'Size:',
+          name: 'Size',
           data: urls,
           size: '80%',
           innerSize: '60%',
@@ -216,12 +216,13 @@ function buildGraph(d) {
         valueSuffix: '%'
     },
     series: [{
-        name: 'Size: ',
+        name: 'Size',
         data: browserData,
         size: '60%',
         dataLabels: {
             formatter: function () {
-                return this.y > 5 ? this.point.name : null;
+                //return this.y > 5 ? this.point.name : null;
+                return '<b>' + this.point.name + ':</b><br />' + this.y + '%';
             },
             color: 'white',
             distance: -30
@@ -234,7 +235,8 @@ function buildGraph(d) {
         dataLabels: {
             formatter: function () {
                 // display only if larger than 1
-                return this.y > .5 ? '<b>' + this.point.name + ':</b> ' + this.y + '%'  : null;
+                //return this.y > .5 ? this.y + '%'  : null;
+                return '<b>' + this.point.name + ':</b><br />' + this.y + '%';
             }
         }
     }]
