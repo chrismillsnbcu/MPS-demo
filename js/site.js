@@ -216,7 +216,6 @@ function buildGraph(d) {
         valueSuffix: '%'
     },
     series: [{
-        name: 'Category',
         data: browserData,
         size: '60%',
         dataLabels: {
@@ -227,7 +226,6 @@ function buildGraph(d) {
             distance: -30
         }
     }, {
-        name: 'Sub Category',
         data: versionsData,
         size: '80%',
         innerSize: '60%',
